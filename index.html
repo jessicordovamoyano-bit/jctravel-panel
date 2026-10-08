@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Panel · JC Travel</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230e7c86'/%3E%3Cpath d='M12 20L54 30L22 48L19 34Z' fill='%23ff6b3d'/%3E%3Cpath d='M19 34L54 30L24 39Z' fill='%23d94f24'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --turquesa:#0e7c86; --turquesa-claro:#e3f2f3; --coral:#ff6b3d; --coral-oscuro:#c2461c;
+    --ambar:#e9a93c; --marron:#5c4a3d; --texto:#3d322a; --suave:#7a6d62;
+    --arena:#F7F4EB; --borde:#e7e0d1; --blanco:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;font-family:'Montserrat',Arial,sans-serif;background:var(--arena);color:var(--texto);line-height:1.5;}
+  h1,h2{font-family:'Playfair Display',Georgia,serif;margin:0;}
+  .oculto{display:none !important;}
+
+  /* Acceso */
+  .acceso{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;}
+  .acceso-caja{background:var(--blanco);border-radius:18px;padding:32px 28px;width:100%;max-width:380px;box-shadow:0 12px 36px rgba(92,74,61,.14);}
+  .acceso-caja h1{font-size:1.6rem;margin:16px 0 4px;}
+  .acceso-caja p{margin:0 0 20px;color:var(--suave);font-size:.92rem;}
+  label{display:block;font-weight:700;font-size:.9rem;margin-bottom:6px;}
+  input[type=password]{width:100%;padding:12px 14px;border:1px solid var(--borde);border-radius:10px;font:inherit;background:var(--arena);}
+  input[type=password]:focus{outline:none;border-color:var(--coral);box-shadow:0 0 0 3px rgba(255,107,61,.2);background:#fff;}
+  .boton{display:inline-block;border:0;border-radius:30px;padding:12px 22px;background:var(--coral);color:#fff;font:inherit;font-weight:700;cursor:pointer;}
+  .boton:hover{background:#f25a2b;}
+  .acceso-caja .boton{width:100%;margin-top:16px;}
+  .error{color:#b42318;font-size:.86rem;margin:8px 0 0;}
+
+  /* Tablero */
+  header{background:var(--blanco);border-bottom:1px solid var(--borde);position:sticky;top:0;z-index:5;}
+  .barra{max-width:1120px;margin:0 auto;padding:12px 20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;}
+  .barra .logo svg{display:block;width:130px;height:auto;}
+  .barra h1{font-size:1.15rem;color:var(--marron);font-weight:700;}
+  .barra .derecha{margin-left:auto;display:flex;gap:10px;align-items:center;}
+  .rango{display:flex;background:var(--arena);border-radius:30px;padding:3px;}
+  .rango button{border:0;background:none;font:inherit;font-size:.85rem;font-weight:600;padding:6px 12px;border-radius:30px;cursor:pointer;color:var(--suave);}
+  .rango button[aria-pressed="true"]{background:var(--turquesa);color:#fff;}
+  .salir{border:1px solid var(--borde);background:#fff;border-radius:30px;padding:6px 14px;font:inherit;font-size:.85rem;cursor:pointer;color:var(--suave);}
+
+  main{max-width:1120px;margin:0 auto;padding:24px 20px 48px;}
+  .aviso{background:#fff8e6;border:1px solid #f3d28b;border-radius:12px;padding:12px 16px;margin-bottom:20px;font-size:.9rem;}
+  .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-bottom:20px;}
+  .kpi{background:var(--blanco);border-radius:14px;padding:18px 20px;border:1px solid var(--borde);}
+  .kpi span{display:block;font-size:.85rem;color:var(--suave);}
+  .kpi strong{display:block;font-family:'Playfair Display',Georgia,serif;font-size:2.2rem;line-height:1.1;margin-top:4px;color:var(--marron);}
+  .kpi small{display:block;font-size:.8rem;color:var(--suave);margin-top:2px;}
+  .kpi.destacado{border:2px solid var(--coral);}
+  .kpi.destacado strong{color:var(--coral-oscuro);}
+
+  .grilla{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px;}
+  .tarjeta{background:var(--blanco);border-radius:14px;padding:20px;border:1px solid var(--borde);}
+  .tarjeta.ancha{grid-column:1 / -1;}
+  .tarjeta h2{font-size:1.15rem;margin-bottom:4px;color:var(--marron);}
+  .tarjeta .ayuda{font-size:.85rem;color:var(--suave);margin:0 0 14px;}
+  .leyenda{display:flex;gap:16px;font-size:.82rem;color:var(--suave);margin-bottom:8px;}
+  .leyenda i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px;}
+  .grafico svg{display:block;width:100%;height:auto;}
+  .vacio{color:var(--suave);font-size:.9rem;padding:16px 0;}
+
+  table{width:100%;border-collapse:collapse;font-size:.9rem;}
+  th{text-align:left;font-size:.78rem;text-transform:uppercase;letter-spacing:.5px;color:var(--suave);font-weight:600;padding:6px 8px;border-bottom:1px solid var(--borde);}
+  td{padding:8px;border-bottom:1px solid #f1ece0;vertical-align:middle;}
+  td.num,th.num{text-align:right;font-variant-numeric:tabular-nums;}
+  .barrita{height:8px;border-radius:4px;background:var(--turquesa-claro);overflow:hidden;min-width:60px;}
+  .barrita div{height:100%;background:var(--turquesa);border-radius:4px;}
+  .filas-barra{display:flex;flex-direction:column;gap:10px;}
+  .fila-barra{display:grid;grid-template-columns:130px 1fr 40px;gap:10px;align-items:center;font-size:.9rem;}
+  .fila-barra .barrita{height:12px;}
+  .fila-barra .barrita div{background:var(--coral);}
+  .etiqueta{display:inline-block;font-size:.75rem;font-weight:700;padding:2px 8px;border-radius:20px;}
+  .etiqueta.wa{background:#e3f6ea;color:#1b7a3d;}
+  .etiqueta.form{background:#fdeee8;color:var(--coral-oscuro);}
+  @media(max-width:640px){
+    .barra h1{display:none;}
+    .barra .derecha{margin-left:0;width:100%;justify-content:space-between;}
+    .fila-barra{grid-template-columns:100px 1fr 34px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ACCESO -->
+<section class="acceso" id="acceso">
+  <form class="acceso-caja" id="form-acceso">
+    <svg viewBox="0 0 240 84" width="150" role="img" aria-label="JC Travel"><text x="4" y="58" font-family="Playfair Display" font-weight="900" font-size="50" fill="#0e7c86">JC</text><path d="M12 70 C 70 84, 150 78, 186 40" fill="none" stroke="#ffb000" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="3 8"/><path d="M186 16 L224 27 L194 43 L191 31 Z" fill="#ff6b3d"/><path d="M191 31 L224 27 L196 36 Z" fill="#d94f24"/><text x="88" y="46" font-family="Playfair Display" font-style="italic" font-weight="700" font-size="28" fill="#ff6b3d">travel</text></svg>
+    <h1>Panel de gestión</h1>
+    <p>Visitas y consultas de jctravel.vercel.app</p>
+    <label for="clave">Contraseña</label>
+    <input type="password" id="clave" autocomplete="current-password" required>
+    <p class="error oculto" id="error-acceso"></p>
+    <button class="boton" type="submit">Entrar</button>
+  </form>
+</section>
+
+<!-- TABLERO -->
+<div id="tablero" class="oculto">
+  <header>
+    <div class="barra">
+      <div class="logo"><svg viewBox="0 0 240 84" role="img" aria-label="JC Travel"><text x="4" y="58" font-family="Playfair Display" font-weight="900" font-size="50" fill="#0e7c86">JC</text><path d="M12 70 C 70 84, 150 78, 186 40" fill="none" stroke="#ffb000" stroke-width="4.5" stroke-linecap="round" stroke-dasharray="3 8"/><path d="M186 16 L224 27 L194 43 L191 31 Z" fill="#ff6b3d"/><path d="M191 31 L224 27 L196 36 Z" fill="#d94f24"/><text x="88" y="46" font-family="Playfair Display" font-style="italic" font-weight="700" font-size="28" fill="#ff6b3d">travel</text></svg></div>
+      <h1>Panel de gestión</h1>
+      <div class="derecha">
+        <div class="rango" role="group" aria-label="Período">
+          <button type="button" data-dias="7" aria-pressed="false">7 días</button>
+          <button type="button" data-dias="30" aria-pressed="true">30 días</button>
+          <button type="button" data-dias="90" aria-pressed="false">90 días</button>
+        </div>
+        <button type="button" class="salir" id="salir">Salir</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <p class="aviso oculto" id="aviso"></p>
+
+    <div class="kpis">
+      <div class="kpi"><span>Visitas</span><strong id="k-visitas">–</strong><small>personas que entraron al sitio</small></div>
+      <div class="kpi"><span>Propuestas abiertas</span><strong id="k-propuestas">–</strong><small>veces que tocaron "Ver propuesta"</small></div>
+      <div class="kpi"><span>Consultas</span><strong id="k-consultas">–</strong><small id="k-consultas-detalle">WhatsApp + formulario</small></div>
+      <div class="kpi destacado"><span>Tasa de consulta</span><strong id="k-tasa">–</strong><small>consultas ÷ visitas</small></div>
+    </div>
+
+    <div class="grilla">
+      <section class="tarjeta ancha">
+        <h2>Visitas y consultas por día</h2>
+        <div class="leyenda"><span><i style="background:#0e7c86"></i>Visitas</span><span><i style="background:#ff6b3d"></i>Consultas</span></div>
+        <div class="grafico" id="g-dias"></div>
+      </section>
+
+      <section class="tarjeta ancha">
+        <h2>Destinos que más interesan</h2>
+        <p class="ayuda">Cuántas veces se abrió cada propuesta y cuántas consultas generó.</p>
+        <div id="t-destinos"></div>
+      </section>
+
+      <section class="tarjeta">
+        <h2>Desde dónde consultan</h2>
+        <p class="ayuda">El botón o sección que usaron para escribirte.</p>
+        <div id="b-ubicaciones"></div>
+      </section>
+
+      <section class="tarjeta">
+        <h2>De dónde llegan</h2>
+        <p class="ayuda">El sitio desde el que entraron (Google, Instagram, directo…).</p>
+        <div id="b-referencias"></div>
+      </section>
+
+      <section class="tarjeta">
+        <h2>Dispositivo</h2>
+        <p class="ayuda">Visitas desde celular o computadora.</p>
+        <div id="b-dispositivos"></div>
+      </section>
+
+      <section class="tarjeta">
+        <h2>Últimas consultas</h2>
+        <p class="ayuda">Las 10 más recientes. No se guardan nombres ni datos personales.</p>
+        <div id="t-ultimas"></div>
+      </section>
+    </div>
+  </main>
+</div>
+
+<script>
+(function(){
+  var claveGuardada = null;
+  try { claveGuardada = sessionStorage.getItem('panel-clave'); } catch (e) {}
+  var dias = 30;
+  var esDemo = /^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /[?&]demo/.test(location.search);
+
+  var $ = function(id){ return document.getElementById(id); };
+  var fmt = new Intl.NumberFormat('es-AR');
+  function esc(t){ return String(t == null ? '' : t).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
+
+  var NOMBRES_UBICACION = {portada:'Botón de la portada', boton_flotante:'Botón flotante', propuesta:'Dentro de una propuesta', formulario:'Formulario'};
+
+  function mostrarTablero(){ $('acceso').classList.add('oculto'); $('tablero').classList.remove('oculto'); }
+  function mostrarAcceso(msg){
+    $('tablero').classList.add('oculto'); $('acceso').classList.remove('oculto');
+    var e = $('error-acceso');
+    if (msg) { e.textContent = msg; e.classList.remove('oculto'); } else { e.classList.add('oculto'); }
+    $('clave').focus();
+  }
+
+  function pedirDatos(clave){
+    if (esDemo) return Promise.resolve(datosDemo());
+    return fetch('/api/stats?dias=' + dias, {headers:{'x-panel-clave': clave}})
+      .then(function(r){
+        return r.json().catch(function(){ return {}; }).then(function(j){
+          if (!r.ok) { var err = new Error(j.error || 'Error ' + r.status); err.status = r.status; throw err; }
+          return j;
+        });
+      });
+  }
+
+  function cargar(){
+    pedirDatos(claveGuardada).then(function(d){ mostrarTablero(); pintar(d); })
+      .catch(function(e){
+        if (e.status === 401) { try { sessionStorage.removeItem('panel-clave'); } catch (x) {} claveGuardada = null; mostrarAcceso('Contraseña incorrecta.'); }
+        else { mostrarTablero(); avisar(e.message); }
+      });
+  }
+
+  function avisar(msg){ var a = $('aviso'); a.textContent = msg; a.classList.toggle('oculto', !msg); }
+
+  function barras(cont, filas, clave, valor, nombre){
+    if (!filas.length) { cont.innerHTML = '<p class="vacio">Todavía sin datos.</p>'; return; }
+    var max = Math.max.apply(null, filas.map(function(f){ return f[valor]; })) || 1;
+    cont.innerHTML = '<div class="filas-barra">' + filas.map(function(f){
+      var n = nombre ? nombre(f[clave]) : f[clave];
+      return '<div class="fila-barra"><span>' + esc(n) + '</span><div class="barrita"><div style="width:' + Math.round(f[valor] / max * 100) + '%"></div></div><span class="num">' + fmt.format(f[valor]) + '</span></div>';
+    }).join('') + '</div>';
+  }
+
+  function graficoDias(d){
+    // Completa los días sin datos para que el eje no tenga huecos
+    var mapa = {}; d.porDia.forEach(function(r){ mapa[r.dia] = r; });
+    var serie = [], hoy = new Date();
+    for (var i = d.dias - 1; i >= 0; i--) {
+      var f = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - i);
+      var k = f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0') + '-' + String(f.getDate()).padStart(2, '0');
+      serie.push({dia:k, visitas:(mapa[k] || {}).visitas || 0, consultas:(mapa[k] || {}).consultas || 0});
+    }
+    var W = 760, H = 220, iz = 36, ab = 28, ar = 10, anchoUtil = W - iz - 10, altoUtil = H - ab - ar;
+    var max = Math.max(4, Math.max.apply(null, serie.map(function(s){ return s.visitas; })));
+    var paso = anchoUtil / serie.length, bw = Math.max(2, paso * 0.38);
+    var y = function(v){ return ar + altoUtil - v / max * altoUtil; };
+    var svg = '<svg viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Visitas y consultas por día">';
+    [0, 0.5, 1].forEach(function(p){
+      var v = Math.round(max * p), yy = y(v);
+      svg += '<line x1="' + iz + '" x2="' + (W - 10) + '" y1="' + yy + '" y2="' + yy + '" stroke="#efe9dc"/><text x="' + (iz - 6) + '" y="' + (yy + 4) + '" text-anchor="end" font-size="11" fill="#7a6d62">' + v + '</text>';
+    });
+    var cada = Math.ceil(serie.length / 8);
+    serie.forEach(function(s, i){
+      var x = iz + i * paso + paso / 2;
+      svg += '<rect x="' + (x - bw) + '" y="' + y(s.visitas) + '" width="' + bw + '" height="' + (ar + altoUtil - y(s.visitas)) + '" rx="2" fill="#0e7c86"><title>' + s.dia + ': ' + s.visitas + ' visitas</title></rect>';
+      svg += '<rect x="' + x + '" y="' + y(s.consultas) + '" width="' + bw + '" height="' + (ar + altoUtil - y(s.consultas)) + '" rx="2" fill="#ff6b3d"><title>' + s.dia + ': ' + s.consultas + ' consultas</title></rect>';
+      if (i % cada === 0) svg += '<text x="' + x + '" y="' + (H - 8) + '" text-anchor="middle" font-size="11" fill="#7a6d62">' + s.dia.slice(8) + '/' + s.dia.slice(5, 7) + '</text>';
+    });
+    $('g-dias').innerHTML = svg + '</svg>';
+  }
+
+  function pintar(d){
+    var t = d.totales;
+    $('k-visitas').textContent = fmt.format(t.visitas);
+    $('k-propuestas').textContent = fmt.format(t.propuestas);
+    $('k-consultas').textContent = fmt.format(t.consultas);
+    $('k-consultas-detalle').textContent = t.whatsapp + ' por WhatsApp · ' + t.formularios + ' por formulario';
+    $('k-tasa').textContent = (t.tasa * 100).toLocaleString('es-AR', {maximumFractionDigits:1}) + ' %';
+    avisar(esDemo ? 'Datos de ejemplo para ver el diseño: no son visitas reales.' :
+      (t.visitas === 0 ? 'Todavía no hay datos en este período. Cuando alguien entre a jctravel.vercel.app, va a aparecer acá.' : ''));
+
+    graficoDias(d);
+
+    var td = $('t-destinos');
+    if (!d.destinos.length) td.innerHTML = '<p class="vacio">Todavía nadie abrió una propuesta en este período.</p>';
+    else {
+      var maxA = Math.max.apply(null, d.destinos.map(function(x){ return x.aperturas; })) || 1;
+      td.innerHTML = '<table><thead><tr><th>Propuesta</th><th class="num">Aperturas</th><th></th><th class="num">Consultas</th></tr></thead><tbody>' +
+        d.destinos.map(function(x){
+          return '<tr><td>' + esc(x.destino) + '</td><td class="num">' + fmt.format(x.aperturas) + '</td><td style="width:30%"><div class="barrita"><div style="width:' + Math.round(x.aperturas / maxA * 100) + '%"></div></div></td><td class="num"><strong>' + fmt.format(x.consultas) + '</strong></td></tr>';
+        }).join('') + '</tbody></table>';
+    }
+
+    barras($('b-ubicaciones'), d.ubicaciones, 'ubicacion', 'consultas', function(u){ return NOMBRES_UBICACION[u] || u; });
+    barras($('b-referencias'), d.referencias, 'referencia', 'visitas');
+    barras($('b-dispositivos'), d.dispositivos, 'dispositivo', 'visitas', function(x){ return x.charAt(0).toUpperCase() + x.slice(1); });
+
+    var tu = $('t-ultimas');
+    if (!d.ultimas.length) tu.innerHTML = '<p class="vacio">Todavía no hay consultas.</p>';
+    else tu.innerHTML = '<table><tbody>' + d.ultimas.map(function(u){
+      var f = new Date(u.fecha);
+      var cuando = f.toLocaleDateString('es-AR', {day:'2-digit', month:'2-digit'}) + ' ' + f.toLocaleTimeString('es-AR', {hour:'2-digit', minute:'2-digit'});
+      var tipo = u.tipo === 'formulario' ? '<span class="etiqueta form">Formulario</span>' : '<span class="etiqueta wa">WhatsApp</span>';
+      return '<tr><td style="white-space:nowrap">' + cuando + '</td><td>' + tipo + '</td><td>' + esc(u.destino && u.destino !== '(sin destino)' ? u.destino : 'Sin destino elegido') + '</td></tr>';
+    }).join('') + '</tbody></table>';
+  }
+
+  function datosDemo(){
+    var porDia = [], hoy = new Date();
+    for (var i = dias - 1; i >= 0; i--) {
+      var f = new Date(hoy.getFullYear(), hoy.getMonth(), hoy.getDate() - i);
+      var k = f.getFullYear() + '-' + String(f.getMonth() + 1).padStart(2, '0') + '-' + String(f.getDate()).padStart(2, '0');
+      var v = 8 + ((i * 7) % 11);
+      porDia.push({dia:k, visitas:v, consultas:Math.round(v / 6)});
+    }
+    var vis = porDia.reduce(function(a, b){ return a + b.visitas; }, 0), con = porDia.reduce(function(a, b){ return a + b.consultas; }, 0);
+    return {dias:dias, totales:{visitas:vis, propuestas:Math.round(vis * 0.6), whatsapp:con - 3, formularios:3, consultas:con, tasa:con / vis},
+      porDia:porDia,
+      destinos:[{destino:'Bariloche, Siete Lagos y San Martín de los Andes', aperturas:41, consultas:9},{destino:'Cataratas a pleno', aperturas:33, consultas:7},{destino:'El Chaltén y El Calafate: senderos y glaciares', aperturas:28, consultas:4},{destino:'Salta y Jujuy: el Norte en colores', aperturas:19, consultas:3}],
+      ubicaciones:[{ubicacion:'propuesta', consultas:16},{ubicacion:'portada', consultas:6},{ubicacion:'boton_flotante', consultas:4},{ubicacion:'formulario', consultas:3}],
+      dispositivos:[{dispositivo:'celular', visitas:Math.round(vis * 0.72)},{dispositivo:'computadora', visitas:Math.round(vis * 0.28)}],
+      referencias:[{referencia:'instagram.com', visitas:120},{referencia:'directo', visitas:95},{referencia:'google.com', visitas:61}],
+      ultimas:[{fecha:new Date().toISOString(), tipo:'click_whatsapp', destino:'Cataratas a pleno'},{fecha:new Date(Date.now() - 36e5).toISOString(), tipo:'formulario', destino:'Bariloche, Siete Lagos y San Martín de los Andes'}]};
+  }
+
+  $('form-acceso').addEventListener('submit', function(e){
+    e.preventDefault();
+    var c = $('clave').value;
+    if (!c) { mostrarAcceso('Escribí la contraseña.'); return; }
+    claveGuardada = c;
+    try { sessionStorage.setItem('panel-clave', c); } catch (x) {}
+    $('clave').value = '';
+    cargar();
+  });
+
+  document.querySelectorAll('.rango button').forEach(function(b){
+    b.addEventListener('click', function(){
+      dias = Number(b.dataset.dias);
+      document.querySelectorAll('.rango button').forEach(function(o){ o.setAttribute('aria-pressed', String(o === b)); });
+      cargar();
+    });
+  });
+
+  $('salir').addEventListener('click', function(){
+    try { sessionStorage.removeItem('panel-clave'); } catch (x) {}
+    claveGuardada = null;
+    mostrarAcceso();
+  });
+
+  if (claveGuardada || esDemo) cargar(); else mostrarAcceso();
+})();
+</script>
+</body>
+</html>

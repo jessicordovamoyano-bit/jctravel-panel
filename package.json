@@ -1,0 +1,8 @@
+{
+  "name": "jctravel-panel",
+  "private": true,
+  "description": "Panel de gestión de JC Travel: recibe visitas y consultas del sitio y las muestra en un tablero con contraseña.",
+  "dependencies": {
+    "@neondatabase/serverless": "^0.10.4"
+  }
+}
